@@ -158,9 +158,9 @@ async function play(videoElementId, videoFileId, optionalAudioFileId) {
   const isDrmVideo = !!MEDIA_FILES[videoFileId].licenseUrl;
 
   videoContentType = MEDIA_FILES[videoFileId].contentType;
-  if (isTunnelModeSupported(videoContentType)) {
-    // videoContentType = createTunnelModeContentType(videoContentType, 'true');
-  }
+  // if (isTunnelModeSupported(videoContentType)) {
+  //   videoContentType = createTunnelModeContentType(videoContentType, 'true');
+  // }
   
   var videoElement = document.getElementById(videoElementId);
 
@@ -189,23 +189,30 @@ async function play(videoElementId, videoFileId, optionalAudioFileId) {
 
   var mediaSource = new MediaSource();
   mediaSource.addEventListener('sourceopen', async function() {
-    // var videoSourceBuffer = mediaSource.addSourceBuffer(videoContentType);
+    var videoSourceBuffer = mediaSource.addSourceBuffer(videoContentType);
     var audioSourceBuffer;
 
     if (optionalAudioFileId) {
       audioSourceBuffer = mediaSource.addSourceBuffer(MEDIA_FILES[optionalAudioFileId].contentType);
     }
 
-    if (audioSourceBuffer) {
-      var audioArrayBuffer = await fetchMediaData(optionalAudioFileId);
-      audioSourceBuffer.appendBuffer(audioArrayBuffer);
-    }
+    var videoArrayBuffer = await fetchMediaData(videoFileId);
+    videoSourceBuffer.addEventListener("updateend", () => {
+      console.log("video source buffer updateend");
 
-    // var videoArrayBuffer = await fetchMediaData(videoFileId);
-    // videoSourceBuffer.addEventListener("updateend", () => {
-    //   mediaSource.endOfStream();
-    // });
-    // videoSourceBuffer.appendBuffer(videoArrayBuffer);
+      if (audioSourceBuffer) {
+        var audioArrayBuffer = await fetchMediaData(optionalAudioFileId);
+        audioSourceBuffer.addEventListener("updateend", () => {
+          console.log("audio source buffer updateend");
+          mediaSource.endOfStream();
+        });
+        audioSourceBuffer.appendBuffer(audioArrayBuffer);
+      }
+      else {
+        mediaSource.endOfStream();
+      }
+    });
+    videoSourceBuffer.appendBuffer(videoArrayBuffer);
   });
 
   videoElement.src = URL.createObjectURL(mediaSource);
@@ -242,11 +249,8 @@ function populateMediaFileIds() {
   var mediaFileIds = [];
   const getParameters = getGetParameters();
 
-  mediaFileIds['video0'] = getParameters['video0'] ?? 'vp9-720p-mp4';
-  mediaFileIds['video1'] = getParameters['video1'] ?? 'vp9-720p-mp4';
-  mediaFileIds['video2'] = getParameters['video2'] ?? 'vp9-720p-mp4';
-  mediaFileIds['video3'] = getParameters['video3'] ?? 'vp9-720p-mp4';
-  mediaFileIds['audio'] = getParameters['audio'] ?? 'opus_mp4';
+  mediaFileIds['video0'] = getParameters['video0'] ?? 'h264-240p-30fps';
+  mediaFileIds['audio'] = getParameters['audio'] ?? 'opus_clear';
 
   return mediaFileIds;
 }
@@ -266,15 +270,6 @@ async function main() {
   await prefetchMediaData(mediaFileIds);
 
   play('primary-video', mediaFileIds['video0'], mediaFileIds['audio']);
-  // window.setTimeout(function() {
-  //   play('secondary-video-1', mediaFileIds['video1']);
-  // }, 2*1000);
-  // window.setTimeout(function() {
-  //   play('secondary-video-2', mediaFileIds['video2']);
-  // }, 4*1000);
-  // window.setTimeout(function() {
-  //   play('secondary-video-3', mediaFileIds['video3']);
-  // }, 6*1000);
 }
 
 
