@@ -196,12 +196,12 @@ async function play(videoElementId, videoFileId, optionalAudioFileId) {
       audioSourceBuffer = mediaSource.addSourceBuffer(MEDIA_FILES[optionalAudioFileId].contentType);
     }
 
-    var videoArrayBuffer = await fetchMediaData(videoFileId);
+    var videoArrayBuffer = mediaCache[videoFileId];
     videoSourceBuffer.addEventListener("updateend", () => {
       console.log("video source buffer updateend");
 
       if (audioSourceBuffer) {
-        var audioArrayBuffer = await fetchMediaData(optionalAudioFileId);
+        var audioArrayBuffer = mediaCache[optionalAudioFileId];
         audioSourceBuffer.addEventListener("updateend", () => {
           console.log("audio source buffer updateend");
           mediaSource.endOfStream();
