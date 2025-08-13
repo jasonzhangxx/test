@@ -32,41 +32,12 @@
           width: 100%;
           height: 100%;
         }
-
-        #secondary-player-layer {
-          position: absolute;
-          top: 60%;
-          height: 40%;
-          width: 100%;
-          padding: 24px;
-          display: flex;
-          justify-content: center;
-        }
-
-        .item {
-          width: 426px;
-          height: 240px;
-          display: inline-block;
-          margin: 24px;
-          vertical-align: middle;
-          background-color: rgba(33, 33, 33, .75);
-        }
     </style>
   </head>
   <body>
+    <button id="play-button">Play</button>
     <div id="primary-player-layer">
-      <video id="primary-video" autoplay="1" loop></video>
-    </div>
-    <div id="secondary-player-layer">
-      <div class="item">
-        <video id="secondary-video-1" autoplay="1" loop></video>
-      </div>
-      <div class="item">
-        <video id="secondary-video-2" autoplay="1" loop></video>
-      </div>
-      <div class="item">
-        <video id="secondary-video-3" autoplay="1" loop></video>
-      </div>
+      <video id="primary-video" loop></video>
     </div>
     <script src="multi-encrypted-video.js"></script>
   </body>

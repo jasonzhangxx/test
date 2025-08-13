@@ -216,7 +216,6 @@ async function play(videoElementId, videoFileId, optionalAudioFileId) {
   });
 
   videoElement.src = URL.createObjectURL(mediaSource);
-  videoElement.play();
 }
 
 function getGetParameters() {
@@ -272,5 +271,13 @@ async function main() {
   play('primary-video', mediaFileIds['video0'], mediaFileIds['audio']);
 }
 
+function startPlayback() {
+  var videos = document.getElementsByTagName('video');
+  for (var i = 0; i < videos.length; i++) {
+    videos[i].play();
+  }
+}
+
+document.getElementById('play-button').addEventListener('click', startPlayback);
 
 main();
