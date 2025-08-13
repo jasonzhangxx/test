@@ -269,6 +269,31 @@ async function main() {
   await prefetchMediaData(mediaFileIds);
 
   play('primary-video', mediaFileIds['video0'], mediaFileIds['audio']);
+
+  const video = document.getElementById('primary-video');
+  const progressBar = document.getElementById('progress-bar');
+  const timeDisplay = document.getElementById('time-display');
+
+  video.addEventListener('timeupdate', () => {
+    if (video.duration) {
+      progressBar.value = video.currentTime;
+      progressBar.max = video.duration;
+      timeDisplay.textContent = `${formatTime(video.currentTime)} / ${formatTime(video.duration)}`;
+    }
+  });
+
+  progressBar.addEventListener('click', (e) => {
+    const rect = progressBar.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const width = rect.width;
+    video.currentTime = (x / width) * video.duration;
+  });
+}
+
+function formatTime(time) {
+  const minutes = Math.floor(time / 60);
+  const seconds = Math.floor(time % 60);
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 }
 
 function startPlayback() {
