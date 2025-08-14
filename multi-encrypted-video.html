@@ -23,6 +23,16 @@
           margin: 0;
         }
 
+        #keydown-label {
+          position: absolute;
+          top: 10px;
+          left: 10px;
+          background-color: rgba(0, 0, 0, 0.5);
+          color: white;
+          padding: 5px;
+          border-radius: 5px;
+        }
+
         #primary-player-layer {
           width: 100%;
           height: 100%;
@@ -33,9 +43,16 @@
           height: 100%;
         }
 
+        #controls-container {
+          display: flex;
+          align-items: center;
+        }
+
         #progress-container {
           display: flex;
           align-items: center;
+          flex-grow: 1;
+          margin-left: 10px;
         }
 
         #progress-bar {
@@ -45,16 +62,23 @@
         #time-display {
           margin-left: 10px;
         }
+
+        :focus {
+          outline: 2px solid blue;
+        }
     </style>
   </head>
   <body>
-    <button id="play-button">Play</button>
+    <div id="keydown-label"></div>
     <div id="primary-player-layer">
       <video id="primary-video" loop></video>
     </div>
-    <div id="progress-container">
-      <progress id="progress-bar" value="0"></progress>
-      <span id="time-display">00:00 / 00:00</span>
+    <div id="controls-container">
+      <button id="play-button">Play</button>
+      <div id="progress-container">
+        <progress id="progress-bar" value="0"></progress>
+        <span id="time-display">00:00 / 00:00</span>
+      </div>
     </div>
     <script src="multi-encrypted-video.js"></script>
   </body>

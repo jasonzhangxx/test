@@ -305,4 +305,22 @@ function startPlayback() {
 
 document.getElementById('play-button').addEventListener('click', startPlayback);
 
+document.addEventListener('keydown', (e) => {
+  const video = document.getElementById('primary-video');
+  const keydownLabel = document.getElementById('keydown-label');
+  keydownLabel.textContent = `Keydown: ${e.key}`;
+
+  if (e.key === 'Enter') {
+    if (video.paused) {
+      video.play();
+    } else {
+      video.pause();
+    }
+  } else if (e.key === 'ArrowLeft') {
+    video.currentTime -= 5;
+  } else if (e.key === 'ArrowRight') {
+    video.currentTime += 5;
+  }
+});
+
 main();
