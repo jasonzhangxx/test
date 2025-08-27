@@ -275,6 +275,7 @@ async function main() {
   const timeDisplay = document.getElementById('time-display');
 
   video.addEventListener('timeupdate', () => {
+    console.log('timeupdate event fired at ' + video.currentTime);
     if (video.duration) {
       progressBar.value = video.currentTime;
       progressBar.max = video.duration;
