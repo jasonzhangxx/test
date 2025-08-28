@@ -275,7 +275,6 @@ async function main() {
   const timeDisplay = document.getElementById('time-display');
 
   video.addEventListener('timeupdate', () => {
-    console.log('timeupdate event fired at ' + video.currentTime);
     if (video.duration) {
       progressBar.value = video.currentTime;
       progressBar.max = video.duration;
@@ -302,6 +301,31 @@ function startPlayback() {
   for (var i = 0; i < videos.length; i++) {
     videos[i].play();
   }
+}
+
+function seekLatencyTest() {
+  const video = document.getElementById('primary-video');
+
+  let startTime = Date.now();  // in ms
+  let seekToTime = video.currentTime + 5;
+
+  const timeupdateCallback = () => {
+    let videoCurrentTime = video.currentTime; // in s
+    let now = Date.now(); // in ms
+    let seekLatency = (now - startTime) - (videoCurrentTime - seekToTime) * 1000;
+    console.log('timeupdate event fired at ' + (now - startTime) 
+      + ' ms, media time: ' + videoCurrentTime
+      + ' s, seek to ' + seekToTime
+      + 's, seek latency is '+ seekLatency + ' ms');
+    if(videoCurrentTime > seekToTime + 1) { // let video play for 1 second
+      console.log('seek latency after 1s is ' + seekLatency);
+      video.removeEventListener('timeupdate', timeupdateCallback);
+    }
+  }
+  video.addEventListener('timeupdate', timeupdateCallback);
+
+  startTime = Date.now();
+  video.currentTime = seekToTime;
 }
 
 document.getElementById('play-button').addEventListener('click', startPlayback);
@@ -336,10 +360,8 @@ document.addEventListener('keydown', (e) => {
     } else {
       video.pause();
     }
-  } else if (key === 'ArrowLeft') {
-    video.currentTime -= 5;
   } else if (key === 'ArrowRight') {
-    video.currentTime += 5;
+    seekLatencyTest();
   }
 });
 
