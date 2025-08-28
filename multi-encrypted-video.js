@@ -309,17 +309,36 @@ document.getElementById('play-button').addEventListener('click', startPlayback);
 document.addEventListener('keydown', (e) => {
   const video = document.getElementById('primary-video');
   const keydownLabel = document.getElementById('keydown-label');
-  keydownLabel.textContent = `Keydown: ${e.key}`;
+  var key = e.key;
+  if (!key || key === 'Unidentified') {
+    switch (e.keyCode) {
+      case 13:
+      case 32768:
+        key = 'Enter';
+        break;
+      case 37:
+      case 32782:
+        key = 'ArrowLeft';
+        break;
+      case 39:
+      case 32783:
+        key = 'ArrowRight';
+        break;
+      default:
+        key = `Unrecognized key code: ${e.keyCode}`;
+    }
+  }
+  keydownLabel.textContent = `Keydown: ${key}`;
 
-  if (e.key === 'Enter') {
+  if (key === 'Enter') {
     if (video.paused) {
       video.play();
     } else {
       video.pause();
     }
-  } else if (e.key === 'ArrowLeft') {
+  } else if (key === 'ArrowLeft') {
     video.currentTime -= 5;
-  } else if (e.key === 'ArrowRight') {
+  } else if (key === 'ArrowRight') {
     video.currentTime += 5;
   }
 });
