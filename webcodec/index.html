@@ -424,7 +424,7 @@
       renderingPath.appendChild(WebGLImporting);
       renderingPath.appendChild(WebGLTexImage);
       renderingPath.appendChild(WebGPUTexImage);
-      renderingPath.setAttribute("value", "0");
+      renderingPath.setAttribute("value", "1");
 
       var renderingPathLabel = document.createElement("label");
       renderingPathLabel.setAttribute("id", "renderingPathLabel");
@@ -433,15 +433,17 @@
       document.body.appendChild(renderingPathLabel);
       document.body.appendChild(renderingPath);
 
-
       var btn = document.createElement("BUTTON");
       btn.innerHTML = "Start";
       btn.setAttribute("id", "start");
       document.body.appendChild(btn);
+      
+      setTimeout(function() {
+                  console.log("Run startSample");
+                  startSample();
+              }, 500);
 
-      btn.onclick = function () {
-        startSample();
-      };
+      
     }
     document.body.onload = main;
   </script>
